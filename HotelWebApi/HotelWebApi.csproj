@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20210416205747_HotelWebApi.DataContext.HotelAppContext.cs" />
+    <Compile Remove="Migrations\20210416205747_HotelWebApi.DataContext.HotelAppContext.Designer.cs" />
+    <Compile Remove="Migrations\20210416210151_HotelWebApi.DataContext.HotelAppContext.cs" />
+    <Compile Remove="Migrations\20210416210151_HotelWebApi.DataContext.HotelAppContext.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Hotel.Entities\Hotel.Entities.csproj" />
+  </ItemGroup>
+
+</Project>
