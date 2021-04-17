@@ -1,0 +1,57 @@
+﻿@model IEnumerable<HotelWebApp.Models.MyBooking>
+
+@{
+    ViewData["Title"] = "MyBooking";
+}
+
+<h2>My Past Booking</h2>
+
+<p>
+    <a asp-action="Index">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FromDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomDetail.RoomNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RoomDetail.RoomType)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FromDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ToDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomDetail.RoomNo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RoomDetail.RoomType)
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+                <tr><td colspan="4" style="text-align:center"><h3>No Bookings available to display</h3></td></tr>
+        }
+
+    </tbody>
+</table>
