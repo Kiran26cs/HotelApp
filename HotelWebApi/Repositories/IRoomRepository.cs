@@ -10,5 +10,6 @@ namespace HotelWebApi.Repositories
     {
         Task AddNewRoom(Room room);
         Task<IEnumerable<Room>> GetRooms();
+        Task<Room> GetRoomAvailability(string RoomType, DateTime startDate, DateTime endDate);
     }
 }

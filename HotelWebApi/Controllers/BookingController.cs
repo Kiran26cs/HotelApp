@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Hotel.Entities;
 using HotelWebApi.Business;
+using Hotel.Entities.Model;
 
 namespace HotelWebApi.Controllers
 {
@@ -20,13 +21,15 @@ namespace HotelWebApi.Controllers
         }
         // GET: api/Booking
         [HttpGet]
-        public async Task<IEnumerable<Booking>> Get()
+        public async Task<IEnumerable<BookingDetail>> Get()
         {
-            return await this.bookingManager.GetBookings();
+            var ctxt = HttpContext.User;
+            var user = ctxt.Identity.Name;
+            return await this.bookingManager.GetBookings(user);
         }
 
         // GET: api/Booking/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
@@ -34,9 +37,11 @@ namespace HotelWebApi.Controllers
 
         // POST: api/Booking
         [HttpPost]
-        public async Task Post([FromBody] Booking booking)
+        public async Task<Room> Post([FromBody] CreateBooking booking)
         {
-            await this.bookingManager.CreateBooking(booking);
+            var ctxt = HttpContext.User;
+            booking.CreatedBy = ctxt.Identity.Name;
+            return await this.bookingManager.CreateBooking(booking);
         }
 
         // PUT: api/Booking/5

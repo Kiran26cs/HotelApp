@@ -1,4 +1,5 @@
 ﻿using Hotel.Entities;
+using Hotel.Entities.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace HotelWebApi.Repositories
     public interface IBookingRepository
     {
         Task CreateBooking(Booking booking);
-        Task<IEnumerable<Booking>> GetBookings();
+        Task<IEnumerable<BookingDetail>> GetBookings(string userID);
     }
 }

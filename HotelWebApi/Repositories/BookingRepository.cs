@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Hotel.Entities;
 using HotelWebApi.DataContext;
 using Microsoft.EntityFrameworkCore;
+using Hotel.Entities.Model;
 
 namespace HotelWebApi.Repositories
 {
@@ -17,13 +18,32 @@ namespace HotelWebApi.Repositories
         }
         public async Task CreateBooking(Booking booking)
         {
+
             await hotelAppContext.Bookings.AddAsync(booking);
-            hotelAppContext.SaveChangesAsync();
+            await hotelAppContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Booking>> GetBookings()
+        public async Task<IEnumerable<BookingDetail>> GetBookings(string userID)
         {
-            return await hotelAppContext.Bookings.ToListAsync();
+            var bookingDetail = (from b in hotelAppContext.Bookings
+                                join r in hotelAppContext.Rooms
+                                on new { RoomId = b.RoomId, CustomerId = b.CreatedBy } equals new { RoomId = r.Id, CustomerId = userID } into results
+                                from res in results.DefaultIfEmpty()
+                                select new BookingDetail
+                                {
+                                    Id = b.Id,
+                                    RoomId = b.RoomId,
+                                    FromDate = b.FromDate,
+                                    Status = b.Status,
+                                    ToDate=b.ToDate,
+                                    RoomDetail = new Room
+                                    {
+                                        Id = b.RoomId,
+                                        RoomNo = res.RoomNo??"",
+                                        RoomType = res.RoomType??""
+                                    }
+                                }).ToAsyncEnumerable<BookingDetail>();
+            return await bookingDetail.ToList();
         }
     }
 }

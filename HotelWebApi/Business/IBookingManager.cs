@@ -1,4 +1,5 @@
 ﻿using Hotel.Entities;
+using Hotel.Entities.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace HotelWebApi.Business
 {
     public interface IBookingManager
     {
-        Task<IEnumerable<Booking>> GetBookings();
-        Task CreateBooking(Booking newBooking);
+        Task<IEnumerable<BookingDetail>> GetBookings(string user);
+        Task<Room> CreateBooking(CreateBooking newBooking);
     }
 }
