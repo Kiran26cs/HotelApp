@@ -13,7 +13,7 @@ namespace HotelWebApi.Controllers
     public class HotelController : ControllerBase
     {
         IHotelManager hotelManager;
-        public BookingController(IHotelManager hotelManager)
+        public HotelController(IHotelManager hotelManager)
         {
             this.hotelManager = hotelManager;
         }
