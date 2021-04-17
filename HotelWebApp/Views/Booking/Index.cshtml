@@ -4,19 +4,19 @@
 }
 @{
     bool isSaved = (bool)(ViewData["IsSaved"]??false);
-    bool isError = (bool)(ViewData["IsSuccess"]??false);
+    bool IsSuccess = (bool)(ViewData["IsSuccess"] ??false);
     string bookedRoomNo = ViewData["BookedRoomNo"] as string;
     string bookedRoomType = ViewData["BookedRoomType"] as string;
-    if (isSaved && !isError)
+    if (isSaved && IsSuccess)
     {
-        <div id="bannerDiv" class="info" style="background-color:chartreuse">
+        <div id="bannerDiv" class="info" style="background-color:antiquewhite; padding:2%;width:75%">
             <h3>Room No: @bookedRoomNo (type: @bookedRoomType) Booked successfully</h3>
         </div>
     }
-    else if (isSaved && isError)
+    else if (isSaved && !IsSuccess)
     {
-        <div id="bannerDiv" class="info" style="background-color:chartreuse">
-            <h3>Error occured while booking</h3>
+        <div id="bannerDiv" class="info" style="background-color:antiquewhite; padding:2%;width:75%">
+            <h3>Error occured while booking. Please check inputs</h3>
         </div>
     }
 }

@@ -46,7 +46,7 @@ namespace HotelWebApp.Services
                 {
                     resp = JsonConvert.DeserializeObject<O>(responseString);
                 }
-                resp.isError = !response.IsSuccessStatusCode;
+                //resp.isError = !response.IsSuccessStatusCode;
             }
             return resp;
         }

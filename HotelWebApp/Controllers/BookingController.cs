@@ -53,14 +53,23 @@ namespace HotelWebApp.Controllers
                 // TODO: Add insert logic here
                 var resp = ApiHelper.PostToApi<RoomDetail, BookingDetail>("https://localhost:44349/api/Booking", bookingDetail);
                 ViewData["IsSaved"] = true;
-                ViewData["IsSuccess"] = !resp.isError;
-                ViewData["BookedRoomNo"] = resp.RoomNo;
-                ViewData["BookedRoomType"] = bookingDetail.RoomType;
-                return RedirectToAction(nameof(Index));
+                if (resp!=null)
+                {
+                    ViewData["IsSuccess"] = true;
+                    ViewData["BookedRoomNo"] = resp.RoomNo;
+                    ViewData["BookedRoomType"] = bookingDetail.RoomType;
+                }
+                else
+                {
+                    ViewData["IsSuccess"] = false;
+                }
+
+                return View("Index");
             }
             catch
             {
-                return View();
+                ViewData["IsSaved"] = true;
+                return View("Index");
             }
         }
 
