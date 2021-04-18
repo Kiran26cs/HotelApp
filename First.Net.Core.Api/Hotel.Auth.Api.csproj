@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AppManager\AppManager.csproj" />
+    <ProjectReference Include="..\AppModels\AppModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="AppManager">
+      <HintPath>..\AppManager\bin\Debug\netcoreapp2.2\AppManager.dll</HintPath>
+    </Reference>
+    <Reference Include="AppModels">
+      <HintPath>..\AppModels\bin\Debug\netcoreapp2.2\AppModels.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
