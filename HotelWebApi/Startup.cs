@@ -29,10 +29,12 @@ namespace HotelWebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddDbContext<HotelAppContext>(op=>op.UseSqlServer(Configuration["ConnectionString:HotelStoreDB"]));
             services.AddTransient<IBookingRepository, BookingRepository>();
             services.AddTransient<IRoomRepository, RoomRepository>();
             services.AddTransient<IBookingManager, BookingManager>();
+            services.AddTransient<IHotelManager, HotelManager>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -48,7 +50,12 @@ namespace HotelWebApi
                 app.UseHsts();
             }
 
+            app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
             app.UseHttpsRedirection();
+            
             app.UseMvc();
         }
     }

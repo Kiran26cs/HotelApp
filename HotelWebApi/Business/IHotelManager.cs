@@ -1,4 +1,5 @@
 ﻿using Hotel.Entities;
+using Hotel.Entities.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace HotelWebApi.Business
 {
     public interface IHotelManager
     {
-        Task<IEnumerable<Room>> GetRooms();
-        Task CreateRoom(Room newRoom);
+        Task<IEnumerable<RoomDetailByDate>> GetRoomsByDate(string DateSelected);
+        Task<bool> CreateRoom(Room newRoom);
     }
 }

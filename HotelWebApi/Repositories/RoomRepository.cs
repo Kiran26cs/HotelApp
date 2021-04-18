@@ -1,4 +1,5 @@
 ﻿using Hotel.Entities;
+using Hotel.Entities.Model;
 using HotelWebApi.DataContext;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,14 +16,60 @@ namespace HotelWebApi.Repositories
         {
             this.hotelAppContext = hotelAppContext;
         }
-        public async Task AddNewRoom(Room room)
+        public async Task<bool> AddNewRoom(Room room)
         {
-            await hotelAppContext.Rooms.AddAsync(room);
+            bool newRoomAdded = false;
+            //check if the room number already exists
+            var exists = hotelAppContext.Rooms.Any(x=>x.RoomNo == room.RoomNo);
+            if (!exists)
+            {
+                newRoomAdded = true;
+                await hotelAppContext.Rooms.AddAsync(room);
+                await hotelAppContext.SaveChangesAsync();
+            }
+            return newRoomAdded;
         }
 
-        public async Task<IEnumerable<Room>> GetRooms()
+        public async Task<IEnumerable<RoomDetailByDate>> GetRoomsByDate(string dateselected)
         {
-            return await hotelAppContext.Rooms.ToListAsync();
+            List<int> bookedRoomIDs = null;
+            List<RoomDetailByDate> FinalList = new List<RoomDetailByDate>();
+            try
+            {
+                //select the bookings active during this period
+                var bookedRooms = await hotelAppContext.Bookings.Where(x => x.FromDate.Date <= Convert.ToDateTime(dateselected).Date && x.ToDate.Date >= Convert.ToDateTime(dateselected).Date).ToListAsync();
+                if (bookedRooms!=null && bookedRooms.Any())
+                {
+                    bookedRoomIDs = bookedRooms.Select(x=>x.RoomId).ToList();
+                    //left join the room IDs above with actuial rooms --> matching ones are booked otherwise Not booked
+                    FinalList = await (from r in hotelAppContext.Rooms
+                                       join i in bookedRoomIDs.Distinct()
+                                       on r.Id equals i into roomjoinres
+                                       from res in roomjoinres.DefaultIfEmpty()
+                                       select new RoomDetailByDate
+                                       {
+                                           RoomNo = r.RoomNo,
+                                           RoomType = r.RoomType,
+                                           Status = res > 0 ? "Booked" : "Not Booked"
+                                       }).ToListAsync();
+                }
+                else
+                {
+                    await hotelAppContext.Rooms.ForEachAsync(x=>
+                    {
+                        FinalList.Add(new RoomDetailByDate {RoomNo = x.RoomNo, RoomType = x.RoomType, Status="Not Booked" });
+                    });
+                }
+                
+                
+                
+            }
+            catch (Exception es)
+            {
+                throw es;
+            }
+            
+            return FinalList;
         }
 
         public async Task<Room> GetRoomAvailability(string RoomType, DateTime startDate, DateTime endDate)

@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using HotelWebApi.Business;
+using Hotel.Entities.Model;
+using Hotel.Entities;
+using Microsoft.AspNetCore.Cors;
 
 namespace HotelWebApi.Controllers
 {
@@ -25,16 +28,23 @@ namespace HotelWebApi.Controllers
         }
 
         // GET: api/Hotel/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{selectedDate}")]
+        public object Get(string selectedDate)
         {
-            return "value";
+            RoomDetailByDateResponse servResponse = null;
+            if (!string.IsNullOrEmpty(selectedDate))
+            {
+                servResponse = new RoomDetailByDateResponse { roomsData = this.hotelManager.GetRoomsByDate(selectedDate).Result.ToList() };
+                return servResponse;
+            }
+            return null;
         }
 
         // POST: api/Hotel
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<bool> Post([FromBody] Room value)
         {
+            return await hotelManager.CreateRoom(value);
         }
 
         // PUT: api/Hotel/5

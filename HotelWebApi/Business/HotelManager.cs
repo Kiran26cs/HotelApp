@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hotel.Entities;
+using Hotel.Entities.Model;
 using HotelWebApi.DataContext;
 using HotelWebApi.Repositories;
 
@@ -15,14 +16,14 @@ namespace HotelWebApi.Business
         {
             this.iRoomRepository = iRoomRepository;
         }
-        public async Task CreateRoom(Room newRoom)
+        public async Task<bool> CreateRoom(Room newRoom)
         {
-            await this.iRoomRepository.AddNewRoom(newRoom);
+            return await this.iRoomRepository.AddNewRoom(newRoom);
         }
 
-        public async Task<IEnumerable<Room>> GetRooms()
+        public async Task<IEnumerable<RoomDetailByDate>> GetRoomsByDate(string DateSelected)
         {
-            return await this.iRoomRepository.GetRooms();
+            return await this.iRoomRepository.GetRoomsByDate(DateSelected);
         }
     }
 }
