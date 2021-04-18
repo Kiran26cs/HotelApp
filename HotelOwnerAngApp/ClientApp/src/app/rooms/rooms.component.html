@@ -1,0 +1,37 @@
+<h1>Add rooms in the hotel</h1>
+<div style="padding-top:5px; padding-bottom:5px; width:100%; float:left; border-style: outset;">
+  <div *ngIf="isServiceResp && createRoomResp">Room added successfully</div>
+  <div *ngIf="isServiceResp && !createRoomResp">Room already exists. Please check</div>
+  <form [formGroup]="roomDetailFormBuilder" (ngSubmit)="onAddFormSubmit(roomDetailFormBuilder)">
+    <div style="width:40%; float:left;">
+      <label>Room Number</label>
+      <label *ngIf="roomDetailFormBuilder.controls['roomNo'].hasError('required') && (roomDetailFormBuilder.controls['roomNo'].touched || submitted)">Room number is mandatory</label>
+      <input name="roomNo" formControlName="roomNo" class="form-control" id="roomNo" />
+
+    </div>
+    <div style="width:40%; float:left;">
+      <label>Room Type (single/Double)</label>
+      <label *ngIf="roomDetailFormBuilder.controls['roomType'].hasError('required') && (roomDetailFormBuilder.controls['roomType'].touched || submitted)">Please select the room type</label>
+      <input name="roomType" formControlName="roomType" class="form-control" id="roomType" />
+      <!--<select ng-model="roomType" ng-options="roomTyp.roomTypeId as roomTyp.roomTypeValue for roomTyp in roomTypes"></select>
+      <select formControlName="roomType">
+        <option *ngFor="let data of roomTypes">{{data.roomTypeValue}}</option>
+      </select>-->
+
+    </div>
+    <div style="width:80%; float:left;">
+      <button type="submit">Add new room</button>
+    </div>
+
+  </form>
+</div>
+<div style="padding-top:5px; padding-bottom:5px; width:100%; border-style: outset; float:left">
+  <!--date picker-->
+  <label>Select a date to check the availability of room</label>
+  <input id="selectedDate" [(ngModel)]="selectedDate" name="RoomsAvlOn" class="form-control" placeholder="Select date to check availability" type="text" bsDatepicker />
+  <button (click)="getAllRoomDetail()">Fetch data</button>
+</div>
+<!--Child communication-->
+<div style="width:100%; padding:5px;border-style: outset; float:left">
+  <app-room-table-disp [roomsListResp]="roomsListResp"></app-room-table-disp>
+</div>

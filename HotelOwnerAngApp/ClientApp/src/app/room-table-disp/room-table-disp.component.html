@@ -1,0 +1,13 @@
+
+<div style="width:100%;  border-style: outset; float:left">
+  <div style="width:33%; float:left;">Room number</div>
+  <div style="width:33%; float:left;">Room Type (Single/Double)</div>
+  <div style="width:33%; float:left;">Booking Status</div>
+  <div style="width:1%; float:left;">&nbsp;</div>
+</div><hr />
+<div *ngFor="let data of roomsListResp">
+  <app-room-list [RoomDataResp]="data" style="width:100%"></app-room-list>
+</div>
+<div *ngIf="roomsListResp==null||roomsListResp==undefined" style="text-align:center">
+  No data available to display
+</div>
