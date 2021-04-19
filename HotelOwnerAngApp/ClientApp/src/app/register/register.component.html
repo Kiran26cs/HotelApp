@@ -1,0 +1,39 @@
+<h1>Register application user</h1>
+<div style="padding:5px; width:50%; float:left; border-style: outset;">
+
+  <form [formGroup]="registerFormBuilder" (ngSubmit)="onRegisterFormSubmit(registerFormBuilder)">
+    <div style="width:100%; float:left;padding-top:5px;">
+      <label>User name</label>
+      <label style="float:right;color:red" *ngIf="registerFormBuilder.controls['UserName'].hasError('required') && (registerFormBuilder.controls['UserName'].touched || submitted)">Username is mandatory</label>
+      <input style="width:100%" name="UserName" formControlName="UserName" class="form-control" id="UserName" />
+
+    </div>
+    <div style="width:100%; float:left;padding-top:5px;">
+      <label>Password</label>
+      <label style="float:right;color:red" *ngIf="registerFormBuilder.controls['Password'].hasError('required') && (registerFormBuilder.controls['Password'].touched || submitted)">Password is mandatory</label>
+      <input style="width:100%" name="Password" formControlName="Password" class="form-control" id="Password" />
+
+
+    </div>
+    <div style="width:100%; float:left;padding-top:5px;">
+      <label>Email</label>
+      <label style="float:right;color:red" *ngIf="registerFormBuilder.controls['Email'].hasError('required') && (registerFormBuilder.controls['Email'].touched || submitted)">Email is mandatory</label>
+      <input style="width:100%" name="Email" formControlName="Email" class="form-control" id="Email" />
+
+
+    </div>
+    <div style="width:40%; float:left;padding-top:5px;">
+      <button type="submit">Register</button>
+    </div>
+    <div *ngIf="submitted && userRegisterResp.isSuccess" style="width:40%; padding-top:5px; float:right; color:red;">
+      User detail submitted successfully
+    </div>
+  </form>
+</div>
+<div style="width:40%; float:left; padding:2%">
+  <div style="width:100%; float:left;">
+    Have account already? <a [routerLink]='["/login"]'>Sign In</a>
+  </div>
+ 
+  
+</div>

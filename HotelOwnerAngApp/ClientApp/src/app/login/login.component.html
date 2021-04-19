@@ -1,0 +1,29 @@
+<h1>Login Hotel App</h1>
+<div style="padding:5px; width:50%; float:left; border-style: outset;">
+
+  <form [formGroup]="loginFormBuilder" (ngSubmit)="onLoginFormSubmit(loginFormBuilder)">
+    <div style="width:100%; float:left;padding-top:5px;">
+      <label>User name</label>
+      <label style="float:right;color:red" *ngIf="loginFormBuilder.controls['UserName'].hasError('required') && (loginFormBuilder.controls['UserName'].touched || submitted)">Username is mandatory</label>
+      <input style="width:100%" name="UserName" formControlName="UserName" class="form-control" id="UserName" />
+
+    </div>
+    <div style="width:100%; float:left;padding-top:5px;">
+      <label>Password</label>
+      <label style="float:right;color:red" *ngIf="loginFormBuilder.controls['Password'].hasError('required') && (loginFormBuilder.controls['Password'].touched || submitted)">Password is mandatory</label>
+      <input style="width:100%" name="Password" formControlName="Password" class="form-control" id="Password" />
+
+
+    </div>
+    <div style="width:70%; float:left;padding-top:5px;">
+      <button type="submit">Let me in!</button>
+    </div>
+    
+  </form>
+</div>
+<div style="width:40%; float:left; padding:2%">
+  <div style="width:100%; float:left;">
+    No account? <a [routerLink]='["/register"]'>Create New</a>
+  </div>
+  
+</div>
