@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using First.Net.Core.Api.InstallServices;
 using AppModels.ConfigModels;
+using Hotel.Auth.Api.AppDBContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace First.Net.Core.Api
 {
@@ -23,6 +25,8 @@ namespace First.Net.Core.Api
             services.Configure<JWTConfiguration>(Configuration.GetSection("JWTConfiguration"));
             services.InstallJWTAuthParams(Configuration);
             services.InstallManagerServices();
+            services.InstallRepositoryServices();
+            services.AddDbContext<AccountsDBContext>(opt=>opt.UseSqlServer(Configuration["ConnectionString:AccountsDB"]));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -38,9 +42,20 @@ namespace First.Net.Core.Api
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
             app.UseAuthentication();
+            app.UseCors(x => x
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Values}/{action=Get}/{id?}");
+            });
+            
         }
     }
 }
