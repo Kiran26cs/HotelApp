@@ -30,7 +30,11 @@ namespace HotelWebApi.Business
                     RoomType = newBooking.RoomType,
                     Status = "Booked",
                     FromDate = newBooking.FromDate,
-                    ToDate = newBooking.ToDate
+                    ToDate = newBooking.ToDate,
+                    CreatedBy = newBooking.CreatedBy,
+                    CreatedOn = DateTime.Now,
+                    UpdatedBy = newBooking.CreatedBy,
+                    UpdatedOn = DateTime.Now 
                 };
                 await this.iBookingRepository.CreateBooking(booking);
                 //retdurn selected room

@@ -72,35 +72,79 @@ namespace HotelWebApi.Repositories
             return FinalList;
         }
 
+        //public async Task<Room> GetRoomAvailability(string RoomType, DateTime startDate, DateTime endDate)
+        //{
+        //    //get booked rooms on the start date
+        //    var BookedRooms = await hotelAppContext.Bookings.Where(x => x.FromDate.Date == startDate.Date).Select(x => x.RoomId).ToListAsync();
+        //    //exclude the booked rooms 
+        //    var RoomsActiveOnFirstDate = hotelAppContext.Rooms.Except(hotelAppContext.Rooms.Where(x=> BookedRooms.Contains(x.Id)).ToList());
+        //    //remaining rooms check if their start date falls before end date of the current booking
+        //    var roomsjoinwithBooking = (from b in hotelAppContext.Bookings.Where(x=>x.FromDate.Date <= endDate.Date)
+        //                          join r in RoomsActiveOnFirstDate
+        //                          on b.RoomId equals r.Id
+        //                          select new Room
+        //                          {
+        //                              Id = r.Id
+        //                          }).ToList();
+        //    //exclude them
+        //    var RoomsAvailableDuringTheGivenPeriod = roomsjoinwithBooking.Except(hotelAppContext.Rooms.Where(x => roomsjoinwithBooking.Select(y => y.Id).Contains(x.Id)).ToList());
+
+        //    //fetch remaining rooms
+        //    var SelectedRoomForGivenOption = (from r in hotelAppContext.Rooms.Where(x => x.RoomType == RoomType)
+        //                             join av in RoomsAvailableDuringTheGivenPeriod
+        //                             on r.Id equals av.Id
+        //                             select new Room
+        //                             {
+        //                                 Id=r.Id,
+        //                                 RoomNo = r.RoomNo,
+        //                                 RoomType = r.RoomType
+        //                             }).FirstOrDefault();
+
+        //    return SelectedRoomForGivenOption;
+        //}
+
         public async Task<Room> GetRoomAvailability(string RoomType, DateTime startDate, DateTime endDate)
         {
-            //get booked rooms on the start date
-            var BookedRooms = await hotelAppContext.Bookings.Where(x => x.FromDate.Date == startDate.Date).Select(x => x.RoomId).ToListAsync();
-            //exclude the booked rooms 
-            var RoomsActiveOnFirstDate = hotelAppContext.Rooms.Except(hotelAppContext.Rooms.Where(x=> BookedRooms.Contains(x.Id)).ToList());
-            //remaining rooms check if their start date falls before end date of the current booking
-            var roomsjoinwithBooking = (from b in hotelAppContext.Bookings.Where(x=>x.FromDate.Date <= endDate.Date)
-                                  join r in RoomsActiveOnFirstDate
-                                  on b.RoomId equals r.Id
-                                  select new Room
-                                  {
-                                      Id = r.Id
-                                  }).ToList();
-            //exclude them
-            var RoomsAvailableDuringTheGivenPeriod = roomsjoinwithBooking.Except(hotelAppContext.Rooms.Where(x => roomsjoinwithBooking.Select(y => y.Id).Contains(x.Id)).ToList());
+            List<Room> availableRooms = new List<Room>();
+            List<int> RoomsToExclude = new List<int>();
+            Room selectedRoom = null;
+            //requested start date <= end date and requested end date is >= end date
 
-            //fetch remaining rooms
-            var SelectedRoomForGivenOption = (from r in hotelAppContext.Rooms.Where(x => x.RoomType == RoomType)
-                                     join av in RoomsAvailableDuringTheGivenPeriod
-                                     on r.Id equals av.Id
-                                     select new Room
-                                     {
-                                         Id=r.Id,
-                                         RoomNo = r.RoomNo,
-                                         RoomType = r.RoomType
-                                     }).FirstOrDefault();
+            var RoomsWithEndDate = await hotelAppContext.Bookings.Where(x=> x.RoomType == RoomType && startDate <= x.ToDate && endDate >= x.ToDate).ToListAsync();
+            if (RoomsWithEndDate !=null && RoomsWithEndDate.Any())
+            {
+                RoomsToExclude.AddRange(RoomsWithEndDate.Select(x=> x.RoomId).ToList().Distinct());
+            }
+            //requested end date >= start date and requested start date <= start date
 
-            return SelectedRoomForGivenOption;
+            var RoomsWithstartDate = await hotelAppContext.Bookings.Where(x => x.RoomType == RoomType && endDate >= x.FromDate && startDate <= x.FromDate).ToListAsync();
+            if (RoomsWithstartDate != null && RoomsWithstartDate.Any())
+            {
+                RoomsToExclude.AddRange(RoomsWithstartDate.Select(x => x.RoomId).ToList().Distinct());
+            }
+
+            //requested start date >= start date and requested end date <= end date
+            var completeBookingIntersection = await hotelAppContext.Bookings.Where(x => x.RoomType == RoomType && startDate >= x.FromDate && endDate <= x.ToDate).ToListAsync();
+            if (completeBookingIntersection != null && completeBookingIntersection.Any())
+            {
+                RoomsToExclude.AddRange(completeBookingIntersection.Select(x => x.RoomId).ToList().Distinct());
+            }
+
+            if (RoomsToExclude != null && RoomsToExclude.Any())
+            {
+                availableRooms = await hotelAppContext.Rooms.Except(hotelAppContext.Rooms.Where(x=> RoomsToExclude.Contains(x.Id))).ToListAsync();
+            }
+            else
+            {
+                availableRooms = await hotelAppContext.Rooms.ToListAsync();
+            }
+
+            if (availableRooms !=null)
+            {
+                selectedRoom = availableRooms.First(x=>x.RoomType == RoomType);
+            }
+
+            return selectedRoom;
         }
     }
 }

@@ -21,26 +21,22 @@ namespace HotelWebApi.Controllers
         }
         // GET: api/Booking
         [HttpGet]
-        public async Task<IEnumerable<BookingDetail>> Get()
+        public async Task<IEnumerable<BookingDetail>> Get(User req)
         {
-            var ctxt = HttpContext.User;
-            var user = ctxt.Identity.Name;
-            return await this.bookingManager.GetBookings(user);
+            return await this.bookingManager.GetBookings(req.UserId);
         }
 
         // GET: api/Booking/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        //[HttpGet("{req}")]
+        //public string Get(object req)
+        //{
+        //    return "value";
+        //}
 
         // POST: api/Booking
         [HttpPost]
         public async Task<Room> Post([FromBody] CreateBooking booking)
         {
-            var ctxt = HttpContext.User;
-            booking.CreatedBy = ctxt.Identity.Name;
             return await this.bookingManager.CreateBooking(booking);
         }
 
