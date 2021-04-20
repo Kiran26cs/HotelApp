@@ -34,10 +34,10 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.FromDate)
+                        @item.FromDate.ToString("dddd , MMM dd yyyy,hh:mm")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.ToDate)
+                        @item.ToDate.ToString("dddd , MMM dd yyyy,hh:mm")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.RoomDetail.RoomNo)

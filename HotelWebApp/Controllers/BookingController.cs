@@ -6,9 +6,11 @@ using HotelWebApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using HotelWebApp.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HotelWebApp.Controllers
 {
+    [Authorize]
     public class BookingController : Controller
     {
         // GET: Booking
@@ -27,8 +29,10 @@ namespace HotelWebApp.Controllers
         {
             try
             {
+                var ctxt = HttpContext.User;
+                var userData = new { UserId = ctxt.Identity.Name };
                 // TODO: Add insert logic here
-                var resp = ApiHelper.GetFromApi<List<MyBooking>, object>("https://localhost:44349/api/Booking");
+                var resp = ApiHelper.GetWithRequestBody<List<MyBooking>, object>("https://localhost:44349/api/Booking", userData).Result;
                 return View(resp);
             }
             catch
@@ -50,6 +54,8 @@ namespace HotelWebApp.Controllers
         {
             try
             {
+                var ctxt = HttpContext.User;
+                bookingDetail.CreatedBy = ctxt.Identity.Name;
                 // TODO: Add insert logic here
                 var resp = ApiHelper.PostToApi<RoomDetail, BookingDetail>("https://localhost:44349/api/Booking", bookingDetail);
                 ViewData["IsSaved"] = true;

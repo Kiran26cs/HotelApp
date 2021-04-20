@@ -17,5 +17,6 @@ namespace HotelWebApp.Models
         [Required(ErrorMessage = "Room type is mandatory")]
         [Display(Name = "Select a Room type")]
         public string RoomType { get; set; }
+        public string CreatedBy { get; set; }
     }
 }
