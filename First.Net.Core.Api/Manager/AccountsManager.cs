@@ -24,7 +24,10 @@ namespace Hotel.Auth.Api.Manager
             string tokenValue = string.Empty;
             if (await accountsRepository.Login(request))
             {
-                tokenValue = itokenprocessor.createNewWebToken(jWTConfiguration);
+                //Fetch user detail
+                //[TODO] - get user role by username
+                //generate token
+                tokenValue = itokenprocessor.createNewWebToken(jWTConfiguration, request.UserName, "Admin");
                 loginResponse = new LoginResponse
                 {
                     UserName = request.UserName,

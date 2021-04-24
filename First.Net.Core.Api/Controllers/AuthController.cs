@@ -31,10 +31,11 @@ namespace First.Net.Core.Api.Controllers
             this.accountsManager = accountsManager;
         }
 
-        [HttpPost("Post")]
+        [HttpPost]
+        [ActionName("Token")]
         public IActionResult Post()
         {
-            return Ok(itokenprocessor.createNewWebToken(jwtConfiguration));
+            return Ok(itokenprocessor.createNewWebToken(jwtConfiguration, "UserKIRAN26cs", "Admin"));
         }
 
         [HttpPost]

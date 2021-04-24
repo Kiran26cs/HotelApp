@@ -11,7 +11,7 @@ namespace AppManager.Processors
 {
     public class TokenProcessor : ITokenProcessor
     {
-        public string createNewWebToken(JWTConfiguration jwtConfiguration)
+        public string createNewWebToken(JWTConfiguration jwtConfiguration, string UserName = null, string RoleName = null)
         {
             //the secret Key
             string secretKey = "Hi_ThiS_is_my_sEcRet_Key";
@@ -23,7 +23,8 @@ namespace AppManager.Processors
 
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Role, "Supplier")
+                new Claim(ClaimTypes.Name, UserName),
+                new Claim(ClaimTypes.Role, RoleName)
             };
 
             var token = new JwtSecurityToken(

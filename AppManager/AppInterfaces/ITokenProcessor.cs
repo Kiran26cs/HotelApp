@@ -7,6 +7,6 @@ namespace AppManager.AppInterfaces
 {
     public interface ITokenProcessor
     {
-        string createNewWebToken(JWTConfiguration jwtConfiguration);
+        string createNewWebToken(JWTConfiguration jwtConfiguration,string UserName = null, string RoleName = null);
     }
 }
