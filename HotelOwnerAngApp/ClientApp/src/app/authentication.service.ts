@@ -9,13 +9,14 @@ import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/toPromise';
 import { strictEqual } from 'assert';
 import { DatePipe } from '@angular/common'
+import { JwtHelperService } from '@auth0/angular-jwt'
 
 @Injectable()
 export class AuthenticationService {
   private processURL: string;
   public userLogResp: UserLoginResponse;
   public authServiceApiURL = 'https://localhost:44335/api/Auth';
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient, private jwtHelper: JwtHelperService) { }
 
   //login(loginDetail: UserLogin): Observable<UserLoginResponse> {
   //  this.processURL = `${this.authServiceApiURL}/Login`;
@@ -44,7 +45,18 @@ export class AuthenticationService {
   }
 
   isAthorized() {
-    return localStorage.getItem('letohppa_vrsetacitnehtua') != null || localStorage.getItem('letohppa_vrsetacitnehtua') != undefined;
+    debugger;
+    let appUserdetail: any
+    let authzed: boolean = false;
+    if (localStorage.getItem('letohppa_vrsetacitnehtua') != null || localStorage.getItem('letohppa_vrsetacitnehtua') != undefined) {
+      appUserdetail = JSON.parse(localStorage.getItem('letohppa_vrsetacitnehtua'));
+      if (appUserdetail && appUserdetail.token != null) {
+        if (!this.jwtHelper.isTokenExpired(appUserdetail.token)) {
+          authzed = true;
+        }
+      }
+    }
+    return authzed;
   }
 
   createUser(registerDetail: RegisterUser): Observable<any> {

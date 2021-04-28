@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component'
 import { AuthenticationService } from '../app/authentication.service'
 import { RouteguardService } from '../app/routeguard.service';
+import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
@@ -46,9 +47,16 @@ import { RouteguardService } from '../app/routeguard.service';
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent }
     ]),
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return null;
+        }
+      }
+    })
   ],
-  providers: [RoomserviceService, BsDatepickerConfig, DatePipe, AuthenticationService, RouteguardService],
+  providers: [RoomserviceService, BsDatepickerConfig, DatePipe, AuthenticationService, RouteguardService, JwtHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
